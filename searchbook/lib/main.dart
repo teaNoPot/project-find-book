@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:searchbook/src/models/google_volume.dart';
+import 'package:searchbook/src/services/http_service.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,6 +33,7 @@ class _HomePageState extends State<HomePage> {
   ];
   List<String> filteredSearchHistory = [];
   String selectedTerm = "";
+  VolumeJson _volume = VolumeJson(items: [], kind: "", totalItems: 0);
 
   List<String> filterSearchTerms({
     required String filter,
@@ -66,6 +71,17 @@ class _HomePageState extends State<HomePage> {
     addSearchTerm(term);
   }
 
+  void findBook(String query) async {
+    final jsonResponse =  await http.get(Uri.parse('https://www.googleapis.com/books/v1/volumes?q=${query}'));
+
+    var jsonBody = json.decode(jsonResponse.body);
+
+    VolumeJson volumelist = VolumeJson.fromJson(jsonBody);
+
+
+    _volume = volumelist;
+  }
+
   FloatingSearchBarController controller = FloatingSearchBarController();
 
   @override
@@ -89,6 +105,7 @@ class _HomePageState extends State<HomePage> {
         body: FloatingSearchBarScrollNotifier(
           child: SearchResultsListView(
             searchTerm: selectedTerm,
+            volume: _volume
           ),
         ),
         transition: CircularFloatingSearchBarTransition(),
@@ -109,6 +126,7 @@ class _HomePageState extends State<HomePage> {
         onSubmitted: (query) {
           setState(() {
             addSearchTerm(query);
+            findBook(query);
             selectedTerm = query;
           });
           controller.close();
@@ -188,12 +206,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class SearchResultsListView extends StatelessWidget {
+class SearchResultsListView extends StatelessWidget  {
   final String searchTerm;
+  final VolumeJson volume;
 
   const SearchResultsListView({
     Key? key,
     required this.searchTerm,
+    required this.volume
   }) : super(key: key);
 
   @override
@@ -218,15 +238,14 @@ class SearchResultsListView extends StatelessWidget {
 
     final fsb = FloatingSearchBar.of(context);
 
-    return ListView(
-      padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
-      children: List.generate(
-        50,
-            (index) => ListTile(
-          title: Text('$searchTerm search result'),
-          subtitle: Text(index.toString()),
-        ),
-      ),
-    );
+    return
+      ListView(
+          padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
+          children: List.generate(volume.items.length > 10 ? 10:volume.items.length, (index) =>
+              ListTile(
+                title: Text('${volume.items[index].volumeinfo.title}'),
+                subtitle: Text('${volume.items[index].volumeinfo.publisher}'),
+              ))
+      );
   }
 }
