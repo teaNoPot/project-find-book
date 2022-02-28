@@ -22,19 +22,18 @@ class _HomePageState extends State<HomePage> {
   static const historyLength = 5;
 
   List<String> _searchHistory = [
-    'On Writing By Stephen King',
-    'Elements Of style',
-    'Name of the wind',
-    'Eigrene'
+    'fuchsia',
+    'flutter',
+    'widgets',
+    'resocoder',
   ];
+  List<String> filteredSearchHistory = [];
+  String selectedTerm = "";
 
-  List<String>? filteredSearchHistory;
-  String? selectedTerm;
-
-  List<String> filteredSearchTerms({
-    @required String? filter
+  List<String> filterSearchTerms({
+    required String filter,
   }) {
-    if (filter != null && filter.isNotEmpty ) {
+    if (filter != null && filter.isNotEmpty) {
       return _searchHistory.reversed
           .where((term) => term.startsWith(filter))
           .toList();
@@ -50,16 +49,16 @@ class _HomePageState extends State<HomePage> {
     }
 
     _searchHistory.add(term);
-    if(_searchHistory.length > historyLength) {
+    if (_searchHistory.length > historyLength) {
       _searchHistory.removeRange(0, _searchHistory.length - historyLength);
     }
 
-    filteredSearchHistory = filteredSearchTerms(filter: null);
+    filteredSearchHistory = filterSearchTerms(filter: "");
   }
 
   void deleteSearchTerm(String term) {
     _searchHistory.removeWhere((t) => t == term);
-    filteredSearchHistory = filteredSearchTerms(filter: null);
+    filteredSearchHistory = filterSearchTerms(filter: "");
   }
 
   void putSearchTermFirst(String term) {
@@ -67,33 +66,134 @@ class _HomePageState extends State<HomePage> {
     addSearchTerm(term);
   }
 
+  FloatingSearchBarController controller = FloatingSearchBarController();
+
   @override
   void initState() {
     super.initState();
-    filteredSearchHistory = filteredSearchTerms(filter: null);
+    controller = FloatingSearchBarController();
+    filteredSearchHistory = filterSearchTerms(filter: "");
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      // TODO: Add the FloatingSearchBar here
-      body:
-        FloatingSearchBar(
-          body: SearchResultsListView(
-            searchTerm: null,
-          )
+      body: FloatingSearchBar(
+        controller: controller,
+        body: FloatingSearchBarScrollNotifier(
+          child: SearchResultsListView(
+            searchTerm: selectedTerm,
+          ),
         ),
+        transition: CircularFloatingSearchBarTransition(),
+        physics: BouncingScrollPhysics(),
+        title: Text(
+          selectedTerm ?? 'The Search App',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        hint: 'Search and find out...',
+        actions: [
+          FloatingSearchBarAction.searchToClear(),
+        ],
+        onQueryChanged: (query) {
+          setState(() {
+            filteredSearchHistory = filterSearchTerms(filter: query);
+          });
+        },
+        onSubmitted: (query) {
+          setState(() {
+            addSearchTerm(query);
+            selectedTerm = query;
+          });
+          controller.close();
+        },
+        builder: (context, transition) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Material(
+              color: Colors.white,
+              elevation: 4,
+              child: Builder(
+                builder: (context) {
+                  if (filteredSearchHistory.isEmpty &&
+                      controller.query.isEmpty) {
+                    return Container(
+                      height: 56,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Start searching',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    );
+                  } else if (filteredSearchHistory.isEmpty) {
+                    return ListTile(
+                      title: Text(controller.query),
+                      leading: const Icon(Icons.search),
+                      onTap: () {
+                        setState(() {
+                          addSearchTerm(controller.query);
+                          selectedTerm = controller.query;
+                        });
+                        controller.close();
+                      },
+                    );
+                  } else {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: filteredSearchHistory
+                          .map(
+                            (term) => ListTile(
+                          title: Text(
+                            term,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          leading: const Icon(Icons.history),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              setState(() {
+                                deleteSearchTerm(term);
+                              });
+                            },
+                          ),
+                          onTap: () {
+                            setState(() {
+                              putSearchTermFirst(term);
+                              selectedTerm = term;
+                            });
+                            controller.close();
+                          },
+                        ),
+                      )
+                          .toList(),
+                    );
+                  }
+                },
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
 
 class SearchResultsListView extends StatelessWidget {
-  final String? searchTerm;
+  final String searchTerm;
 
   const SearchResultsListView({
     Key? key,
-    @required this.searchTerm,
+    required this.searchTerm,
   }) : super(key: key);
 
   @override
@@ -116,7 +216,10 @@ class SearchResultsListView extends StatelessWidget {
       );
     }
 
+    final fsb = FloatingSearchBar.of(context);
+
     return ListView(
+      padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
       children: List.generate(
         50,
             (index) => ListTile(
