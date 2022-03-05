@@ -20,12 +20,12 @@ Hours spent : 8 hours
 
 UI design : 
 
-[ ] Create AppBarUI
-[ ] Create SearchBarUI
-[x] Create a data mockup for book list.
-[ ] Create a BookListView
-[ ] Create a BookInfoScreen
-[ ] Create a PopularBookListView to view popular books (using the data mockup)
+( ) Create AppBarUI
+( ) Create SearchBarUI
+(x) Create a data mockup for book list.
+( ) Create a BookListView
+( ) Create a BookInfoScreen
+( ) Create a PopularBookListView to view popular books (using the data mockup)
 
 
 ## Usecase flow of the main project
