@@ -20,9 +20,10 @@ Hours spent : 8 hours
 
 UI design : 
 
-- [ ] Create AppBarUI
-- [ ] Create SearchBarUI
+- [x] Create AppBarUI
+- [x] Create SearchBarUI
 - [x] Create a data mockup for book list.
+- [x] Create a filterTagUI.
 - [ ] Create a BookListView
 - [ ] Create a BookInfoScreen
 - [ ] Create a PopularBookListView to view popular books (using the data mockup)
