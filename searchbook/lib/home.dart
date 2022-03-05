@@ -1,73 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:searchbook/bookAppTheme.dart';
 
-class HomePage extends StatelessWidget {
+
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+  @override
+  _HomePageState createState() => _HomePageState();
+}
 
-  // TODO: Make a collection of cards (102)
-  // TODO: Add a variable for Category (104)
+class _HomePageState extends State<HomePage> {
+  CategoryType categoryType = CategoryType.ui;
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Return an AsymmetricView (104)
-    // TODO: Pass Category variable to AsymmetricView (104)
-    return Scaffold(
-      // Add app bar (102)
-      appBar: AppBar(
-        title: const Text('BOOK '),
-        leading: IconButton(
-          icon: const Icon(Icons.menu,
-          semanticLabel: 'menu',
-          ),
-          onPressed: () {
-            print('Menu button');
-          },
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.search,
-            semanticLabel: 'search'),
-            onPressed: () {
-              print('search button');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.tune,
-                semanticLabel: 'filter'),
-            onPressed: () {
-              print('Filter button');
-            },
-          ),
-        ],
-      ),
-
-      // TODO: Add a grid view (102)
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.all(16.0),
-        childAspectRatio: 8.0 / 9.0,
-        // TODO: Build a grid of cards (102)
-        children: <Widget>[
-          Card(
-            clipBehavior: Clip.antiAlias,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 18.0 / 11.0,
-                  child: Image.asset('assets/diamond.png'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                  
-                )
-              ],
+    return Container(
+      color: BookAppTheme.nearlyWhite,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).padding.top,
             ),
-
-
-          )
-        ],
-      ),
-      resizeToAvoidBottomInset: false,
+            //getAppBarUI(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: <Widget>[
+                      //getSearchBarUI(),
+                      getBooksUI(),
+                      Flexible(
+                        child: getPopularBooksUI()
+                      ),
+                    ],
+                  )
+                )
+              )
+            )
+          ],
+        )
+      )
     );
   }
+
+  Widget getBooksUI() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+          child: Text(
+            ''
+          )
+        )
+      ],
+    );
+  }
+
+  Widget getPopularBooksUI() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Popular Books',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+              letterSpacing: 0.27,
+              color: BookAppTheme.darkerText,
+            ),
+          ),
+          Flexible(
+            child: Text("test"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void moveTo() {
+    Navigator.push<dynamic>(
+      context,
+      MaterialPageRoute<dynamic>(
+        builder: (BuildContext context) => Text("BookInfoScreen()"),
+      ),
+    );
+  }
+
+
+}
+
+
+
+enum CategoryType {
+  ui,
+  coding,
+  basic,
 }
