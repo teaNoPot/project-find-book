@@ -14,7 +14,7 @@ I'm also envisioning a fifth part to the project :
 ``` 
 Level : 1
 Status : OnGoing
-Hours spent : 8 hours 
+Hours spent : 12 hours 
 ```
 ## TODO
 
