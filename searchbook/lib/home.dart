@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  CategoryType categoryType = CategoryType.ui;
+  SimpleFilter simpleFilter = SimpleFilter.fantasy;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
       )
     );
   }
+
 
   // DONE: getAppBarUI - 122-001
   Widget getAppBarUI() {
@@ -90,7 +91,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // TODO: getSearchBarUI - 122-002:
+  // DONE: getSearchBarUI - 122-002:
   Widget getSearchBarUI() {
     return Padding(
       padding: const EdgeInsets.only(top: 9.0, left: 18),
@@ -163,6 +164,58 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // filterTagUI
+  Widget filterTagUI(SimpleFilter simpleFilterData, bool isSelected) {
+    String txt = '';
+    if (SimpleFilter.fantasy == simpleFilterData) {
+      txt = 'Fantasy';
+    } else if (SimpleFilter.thriller == simpleFilterData) {
+      txt = 'Thriller';
+    } else if (SimpleFilter.horror == simpleFilterData) {
+      txt = 'Horror';
+    }
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: isSelected ?
+            BookAppTheme.nearlyBlue : BookAppTheme.nearlyWhite,
+          borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+          border: Border.all(color: BookAppTheme.nearlyBlue)
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            splashColor: Colors.white24,
+            borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+            onTap: () {
+              setState(() {
+                simpleFilter = simpleFilterData;
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 12, bottom: 12, left: 18, right: 18),
+              child: Center(
+                child: Text(
+                  txt,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    letterSpacing: 0.27,
+                    color: isSelected
+                        ? BookAppTheme.nearlyWhite
+                        : BookAppTheme.nearlyBlue,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ),
+      ),
+    );
+  }
+
   // TODO: getBooksUI - 122-003
   Widget getBooksUI() {
     return Column(
@@ -217,8 +270,8 @@ class _HomePageState extends State<HomePage> {
 
 
 
-enum CategoryType {
-  ui,
-  coding,
-  basic,
+enum SimpleFilter {
+  fantasy,
+  thriller,
+  horror,
 }
