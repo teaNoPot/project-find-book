@@ -38,7 +38,7 @@ API :
 
 ## Book UI so far :
 
-[Light UI First Screen](./assets/Light_UI_first_screen.PNG) [Dark UI First Screen](./assets/Dark_UI_first_screen.PNG)
+![Light UI First Screen](./assets/Light_UI_first_screen.PNG) ![Dark UI First Screen](./assets/Dark_UI_first_screen.PNG)
 
 
 ## Usecase flow of the main project
