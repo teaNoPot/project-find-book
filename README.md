@@ -52,13 +52,11 @@ UI design :
 	- 122-000: HomePage UI
 		- 122-001: Appbar UI
 		- 122-002: SearchBar UI
-		- 122-003: getBooksUI UI
-		- 122-004: getPopularBooksUI UI
-	  
+		- 122-003: getBooks UI
+		- 122-004: getPopularBooks UI
 	- 123-000: asynchronous calls -> response
 		- 123-001: How to perform these calls ?
 		- 123-002: What is the behavior of the async calls in Dart?
-		
 	- 124-000: Book List View UI
 	- 125-000: Popular Book List View UI
 	- 126-000: Book Info Screen UI
