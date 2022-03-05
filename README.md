@@ -46,20 +46,21 @@ UI design :
 	- 114-000: Android studio/ Visual studio code For environement.
 		- 114-001: Getting Started (Installing environement, paths)
 
-- 120-000 Searches books :  
+- 120-000 Books UI :  
 	- 121-000: API to fetch data
 		- 121-001 How to fetch data?
-	- 122-000: Search bar UI 
-		- 121-001: How to design the UI?
+	- 122-000: HomePage UI
+		- 122-001: Appbar UI
+		- 122-002: SearchBar UI
+		- 122-003: getBooks UI
+		- 122-004: getPopularBooks UI
 	- 123-000: asynchronous calls -> response
 		- 123-001: How to perform these calls ?
 		- 123-002: What is the behavior of the async calls in Dart?
-	- 124-000: HomePage UI
-	  - 124-001: Appbar UI
-	  - 124-002: Book List View UI
-	  - 124-003: Popular Book List View UI
-	- 125-000: Book Info Screen UI
-	  - 125-001: Book model
+	- 124-000: Book List View UI
+	- 125-000: Popular Book List View UI
+	- 126-000: Book Info Screen UI
+		- 126-001: Book model
 
 - 130-000 Displays details : 
 	- 131-000: Grid of cards displaying book results
