@@ -14,19 +14,31 @@ I'm also envisioning a fifth part to the project :
 ``` 
 Level : 1
 Status : OnGoing
-Hours spent : 8 hours 
+Hours spent : 12 hours 
 ```
 ## TODO
 
 UI design : 
 
-- [x] Create AppBarUI
-- [x] Create SearchBarUI
+- [x] Create AppBar UI
+- [x] Create SearchBar UI
 - [x] Create a data mockup for book list.
-- [x] Create a filterTagUI.
-- [ ] Create a BookListView
-- [ ] Create a BookInfoScreen
-- [ ] Create a PopularBookListView to view popular books (using the data mockup)
+- [x] Create a tags .
+- [x] Create a BookListView
+- [x] Create a Book Details screen
+- [x] Create a Trending BookListView to view trending books (using the data mockup for now).
+- [ ] Create a favorites list of books.
+- [ ] Create a Categories list.
+
+API : 
+- [ ] Create providers for http calls to google books api 
+- [ ] Create a converted for the json calls
+- [ ] Handle not found screens.
+
+
+## Book UI so far :
+
+![Light UI First Screen](./assets/Light_UI_first_screen.PNG) ![Dark UI First Screen](./assets/Dark_UI_first_screen.PNG)
 
 
 ## Usecase flow of the main project
