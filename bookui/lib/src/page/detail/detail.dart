@@ -145,8 +145,6 @@ class DetailPage extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildIconText(IconData icon, Color color, String text) {
     return Row(
       children: [
