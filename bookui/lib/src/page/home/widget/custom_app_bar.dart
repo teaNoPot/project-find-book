@@ -1,8 +1,11 @@
 import 'package:bookui/src/settings/settings_controller.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:bookui/src/providers/book_provider.dart';
 import 'package:provider/provider.dart';
+
+import '../../../model/google_book.dart';
 
 class CustomAppBar extends StatefulWidget {
   const CustomAppBar({Key? key, required this.settingsController})
@@ -14,6 +17,10 @@ class CustomAppBar extends StatefulWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
+  List<GoogleBookModel> books = [];
+  int page = 0;
+  bool isLoading = true;
+  String? query = "flutter";
   late TextEditingController _controller;
 
   @override
@@ -37,17 +44,26 @@ class _CustomAppBarState extends State<CustomAppBar> {
           Expanded(
               child: Stack(children: <Widget>[
             TextField(
+              onChanged: (q) {
+                print(q);
+                query = q;
+              },
               decoration: InputDecoration(
                   filled: true,
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                       borderSide: BorderSide.none),
                   contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                  prefixIcon: Icon(
-                    Icons.search_outlined,
-                    color: Theme.of(context).colorScheme.onSurface,
-                    size: 30,
-                  ),
+                  prefixIcon: IconButton(
+                      onPressed: () async {
+                        books.clear();
+                        await getBooks();
+                      },
+                      icon: Icon(
+                        Icons.search_outlined,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        size: 30,
+                      )),
                   hintText: 'Search book here..',
                   hintStyle: TextStyle(color: Colors.grey[600])),
             ),
@@ -67,5 +83,27 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ],
       ),
     );
+  }
+
+  Future<void> getBooks() async {
+    try {
+      final response = await http.get(Uri.parse(
+          "https://www.googleapis.com/books/v1/volumes?q=$query&startIndex=$page&maxResults=40"));
+
+      //print("response.body ${response.body}");
+      final items = jsonDecode(response.body)['items'];
+      List<GoogleBookModel> bookList = [];
+      for (var item in items) {
+        bookList.add(GoogleBookModel.fromApi(item));
+      }
+
+      books.addAll(bookList);
+
+      print(books.length);
+      page += 40;
+      isLoading = false;
+    } catch (e) {
+      print("error get books $e");
+    }
   }
 }
