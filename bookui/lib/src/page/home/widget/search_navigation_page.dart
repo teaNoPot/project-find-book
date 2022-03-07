@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:bookui/src/settings/settings_controller.dart';
+import 'package:provider/provider.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../../../model/google_book.dart';
+import 'package:bookui/src/model/google_book.dart';
+import 'package:bookui/src/providers/book_provider.dart';
+
+import 'favorite.dart';
 
 class SearchNavig extends StatefulWidget {
   final SettingsController controller;
@@ -15,11 +20,10 @@ class SearchNavig extends StatefulWidget {
   _SearchNavigState createState() => _SearchNavigState();
 }
 
-class _SearchNavigState extends State<SearchNavig> with ChangeNotifier {
-  List<GoogleBookModel> books = [];
-  int page = 0;
-  bool isLoading = true;
-  String? query = "flutter";
+class _SearchNavigState extends State<SearchNavig> {
+  HomeProvider? _provider;
+
+  // Controllers
   late TextEditingController _controller;
   final ScrollController _scrollController = ScrollController();
 
@@ -27,13 +31,7 @@ class _SearchNavigState extends State<SearchNavig> with ChangeNotifier {
   void initState() {
     super.initState();
     _controller = TextEditingController();
-
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        getBooks();
-      }
-    });
+    _provider = Provider.of<HomeProvider>(context, listen: false);
   }
 
   @override
@@ -53,33 +51,35 @@ class _SearchNavigState extends State<SearchNavig> with ChangeNotifier {
             // SearchBar
             Row(
               children: [
-                Expanded(
-                    child: Stack(children: <Widget>[
-                  TextField(
-                    onChanged: (q) {
-                      print(q);
-                      query = q;
-                    },
-                    decoration: InputDecoration(
-                        filled: true,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide.none),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                        prefixIcon: IconButton(
-                            onPressed: () async {
-                              books.clear();
-                              await getBooks();
+                Consumer<HomeProvider>(
+                    builder: (context, provider, widget) => Expanded(
+                            child: Stack(children: <Widget>[
+                          TextField(
+                            onChanged: (q) {
+                              _provider?.query = q;
                             },
-                            icon: Icon(
-                              Icons.search_outlined,
-                              color: Theme.of(context).colorScheme.onSurface,
-                              size: 30,
-                            )),
-                        hintText: 'Search book here..',
-                        hintStyle: TextStyle(color: Colors.grey[600])),
-                  ),
-                ])),
+                            decoration: InputDecoration(
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide.none),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(vertical: 0),
+                                prefixIcon: IconButton(
+                                    onPressed: () {
+                                      _search();
+                                    },
+                                    icon: Icon(
+                                      Icons.search_outlined,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                      size: 30,
+                                    )),
+                                hintText: 'Search book here..',
+                                hintStyle: TextStyle(color: Colors.grey[600])),
+                          ),
+                        ]))),
                 IconButton(
                     onPressed: () {
                       widget.controller.updateThemeMode(
@@ -95,61 +95,54 @@ class _SearchNavigState extends State<SearchNavig> with ChangeNotifier {
               ],
             ),
             // Results
-            Expanded(
-                child: Stack(children: [
-              Container(
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(20),
-                  primary: false,
-                  shrinkWrap: true,
-                  controller: _scrollController,
-                  scrollDirection: Axis.vertical,
-                  itemCount: books.length,
-                  itemBuilder: (_, index) {
-                    final book = books[index];
-                    return GestureDetector(
-                        onTap: () {},
-                        child: BookWidget(book.title, book.author,
-                            book.subtitle, book.thumbnail, book.description));
-                  },
-                  separatorBuilder: (_, index) => const SizedBox(
-                    height: 20,
-                  ),
-                ),
-              ),
-            ]))
+            Consumer<HomeProvider>(
+                builder: (context, provider, widget) => Expanded(
+                        child: Stack(children: [
+                      Container(
+                        child: ListView.separated(
+                          padding: const EdgeInsets.all(20),
+                          primary: false,
+                          shrinkWrap: true,
+                          controller: _scrollController,
+                          scrollDirection: Axis.vertical,
+                          itemCount: provider.books.length,
+                          itemBuilder: (_, index) {
+                            final book = provider.books[index];
+
+                            return GestureDetector(
+                                onTap: () {},
+                                child: BookWidget(
+                                    book.id,
+                                    book.title,
+                                    book.author,
+                                    book.subtitle,
+                                    book.thumbnail,
+                                    book.description));
+                          },
+                          separatorBuilder: (_, index) => const SizedBox(
+                            height: 20,
+                          ),
+                        ),
+                      ),
+                      provider.isLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : SizedBox(),
+                    ])))
           ],
         ));
   }
 
-  Future<void> getBooks() async {
-    try {
-      final response = await http.get(Uri.parse(
-          "https://www.googleapis.com/books/v1/volumes?q=$query&startIndex=$page&maxResults=40"));
-
-      //print("response.body ${response.body}");
-      final items = jsonDecode(response.body)['items'];
-      List<GoogleBookModel> bookList = [];
-      for (var item in items) {
-        bookList.add(GoogleBookModel.fromApi(item));
-      }
-
-      books.addAll(bookList);
-
-      print(books.length);
-      page += 40;
-      isLoading = false;
-    } catch (e) {
-      print("error get books $e");
-    }
+  void _search() {
+    _provider?.books.clear();
+    _provider?.showLoading();
+    _provider?.getBooks();
   }
 }
 
 class BookWidget extends StatelessWidget {
-  final String? _title, _author, _subtitle, _thumbnail, _description;
-
-  BookWidget(this._title, this._author, this._subtitle, this._thumbnail,
-      this._description);
+  final String? _id, _title, _author, _subtitle, _thumbnail, _description;
+  BookWidget(this._id, this._title, this._author, this._subtitle,
+      this._thumbnail, this._description);
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +152,7 @@ class BookWidget extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.network(_thumbnail ?? "-",
-                 width: 80, height: 150, fit: BoxFit.cover),
+                width: 80, height: 150, fit: BoxFit.cover),
           ),
           const SizedBox(
             width: 20,
@@ -181,10 +174,7 @@ class BookWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Icon(
-                        Icons.favorite_border_outlined,
-                        color: Colors.orange[300],
-                      )
+                      FavoriteWidget(favoriteId: _id ?? "-")
                     ]),
                 Text(
                   _author ?? "-",
@@ -241,3 +231,5 @@ class BookWidget extends StatelessWidget {
     );
   }
 }
+
+

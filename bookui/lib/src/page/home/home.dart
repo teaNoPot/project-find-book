@@ -4,6 +4,7 @@ import 'package:bookui/src/page/home/widget/recommended_book.dart';
 import 'package:bookui/src/page/home/widget/trending_book.dart';
 import 'package:bookui/src/settings/settings_controller.dart';
 import 'package:bookui/src/page/home/widget/search_navigation_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,11 +20,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  List<String> _favorites = [];
   static List<Widget> _widgetOptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorites();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void _loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _favorites = (prefs.getStringList('favorites') ?? []);
     });
   }
 
@@ -52,9 +67,9 @@ class _HomePageState extends State<HomePage> {
       selectedItemColor: Colors.amber[800],
       items: const [
         BottomNavigationBarItem(
-          label: 'Home',
+          label: 'Explore',
           icon: Icon(
-            Icons.home_filled,
+            Icons.whatshot,
           ),
         ),
         BottomNavigationBarItem(
@@ -72,23 +87,38 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
 class HomeNavig extends StatelessWidget {
   final SettingsController controller;
-  const HomeNavig({Key? key, required this.controller}): super(key: key);
+
+  const HomeNavig({Key? key, required this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         Container(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            "Explore",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
-          ),
-        ),
-        CustomAppBar(settingsController: controller),
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Explore",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                ),
+                IconButton(
+                    onPressed: () {
+                      controller.updateThemeMode(
+                          controller.themeMode == ThemeMode.light
+                              ? ThemeMode.dark
+                              : ThemeMode.light);
+                    },
+                    icon: Icon(
+                      controller.themeMode == ThemeMode.light
+                          ? Icons.dark_mode_rounded
+                          : Icons.light_mode_rounded,
+                    ))
+              ],
+            )),
         //ComingBook(),
         RecommendedBook(),
         TrendingBook(),

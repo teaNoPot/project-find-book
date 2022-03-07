@@ -5,7 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class HomeProvider with ChangeNotifier {
+
   List<GoogleBookModel> books = [];
+  List<String> favoritesId = [];
+
   int page = 0;
   bool isLoading = true;
   String? query = "flutter";
@@ -30,6 +33,26 @@ class HomeProvider with ChangeNotifier {
       print("error get books $e");
     }
   }
+
+
+
+  void onFavorite(String id) {
+    if(favoritesId.where((fav) => fav == id).isNotEmpty) {
+      favoritesId.remove(id);
+    } else {
+      favoritesId.add(id);
+    }
+
+    notifyListeners();
+  }
+
+  bool isFavorite(String id) {
+    if(favoritesId.where((fav) => fav == id).isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
 
   void showLoading() {
     isLoading = true;
