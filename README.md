@@ -14,7 +14,7 @@ I'm also envisioning a fifth part to the project :
 ``` 
 Level : 1
 Status : OnGoing
-Hours spent : 15 hours 
+Hours spent : 17 hours 
 ```
 ## TODO : (Chronological)
 
@@ -27,20 +27,21 @@ UI design :
 - [x] Create a BookListView
 - [x] Create a Book Details screen
 - [x] Create a Trending BookListView to view trending books (using the data mockup for now).
-- [ ] Create a favorites list of books.
+- [x] Create a favorites list of books.
 - [ ] Create a Categories list.
 - [x] Modify a display UI for the list of books.
 - [ ] Refactor home.dart to use routes and different ways to handle the different widgets. 
+- [ ] Remake the book details screen.
 
 API : 
 - [x] Create providers for http calls to google books api 
 - [x] Create a converted for the json calls
-- [ ] Handle not found screens.
+- [] Handle not found screens.
 
 
 ## Book UI so far :
 
-![Search Favorite Demo #1](./assets/search_favorite_demo.gif) 
+![Search Favorite Demo #1](./assets/demo2.gif) 
 
 
 ## Usecase flow of the main project

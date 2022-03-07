@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/favorite_list_screen.dart';
+
 class HomePage extends StatefulWidget {
   final SettingsController settingsController;
 
@@ -20,13 +22,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  List<String> _favorites = [];
   static List<Widget> _widgetOptions = [];
 
   @override
   void initState() {
     super.initState();
-    _loadFavorites();
   }
 
   void _onItemTapped(int index) {
@@ -35,21 +35,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _loadFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _favorites = (prefs.getStringList('favorites') ?? []);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     _widgetOptions = <Widget>[
       HomeNavig(controller: widget.settingsController),
       SearchNavig(controller: widget.settingsController),
-      Text(
-        'Index 2: Favorites',
-      ),
+      FavoriteNavig(controller: widget.settingsController),
     ];
 
     return Scaffold(

@@ -8,6 +8,7 @@ class HomeProvider with ChangeNotifier {
 
   List<GoogleBookModel> books = [];
   List<String> favoritesId = [];
+  List<GoogleBookModel> favoriteBooks = [];
 
   int page = 0;
   bool isLoading = true;
@@ -34,13 +35,37 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
+  Future<GoogleBookModel?> getBookDetail(String? id) async {
+    try {
+      final response = await http
+          .get(Uri.parse("https://www.googleapis.com/books/v1/volumes/$id"));
 
+      //print("url ${response.request?.url}");
+      //print("response.body ${jsonDecode(response.body)}");
+      return GoogleBookModel.fromApi(jsonDecode(response.body));
+    } catch (e) {
+      print("error get book detail $e");
+      return null;
+    }
+  }
 
-  void onFavorite(String id) {
-    if(favoritesId.where((fav) => fav == id).isNotEmpty) {
+  bool inFavList(String id) {
+    return favoritesId.contains(id);
+  }
+
+  void onFavorite(String id) async {
+
+    favoriteBooks = favoriteBooks.where((book) => inFavList(book.id ?? "")).toList();
+
+    if(favoritesId.contains(id)) {
       favoritesId.remove(id);
+      favoriteBooks.remove(favoriteBooks.where((book) => book.id == id).first);
     } else {
       favoritesId.add(id);
+      GoogleBookModel book = await getBookDetail(id) ?? GoogleBookModel(id: "NULL");
+      if(book.id != "NULL") {
+        favoriteBooks.add(book);
+      }
     }
 
     notifyListeners();
