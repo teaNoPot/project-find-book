@@ -40,7 +40,7 @@ API :
 
 ## Book UI so far :
 
-![Light UI First Screen](./assets/Light_UI_first_screen_2.PNG) ![Light UI Search Screen](./assets/Light_UI_search_screen.PNG)
+![Search Favorite Demo #1](./assets/search_favorite_demo.gif) 
 
 
 ## Usecase flow of the main project
