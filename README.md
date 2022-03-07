@@ -14,7 +14,7 @@ I'm also envisioning a fifth part to the project :
 ``` 
 Level : 1
 Status : OnGoing
-Hours spent : 14 hours 
+Hours spent : 15 hours 
 ```
 ## TODO : (Chronological)
 
@@ -29,7 +29,7 @@ UI design :
 - [x] Create a Trending BookListView to view trending books (using the data mockup for now).
 - [ ] Create a favorites list of books.
 - [ ] Create a Categories list.
-- [ ] Modify a display UI for the list of books.
+- [x] Modify a display UI for the list of books.
 - [ ] Refactor home.dart to use routes and different ways to handle the different widgets. 
 
 API : 
@@ -40,7 +40,7 @@ API :
 
 ## Book UI so far :
 
-![Light UI First Screen](./assets/Light_UI_first_screen.PNG) ![Dark UI First Screen](./assets/Dark_UI_first_screen.PNG)
+![Light UI First Screen](./assets/Light_UI_first_screen_2.PNG) ![Light UI Search Screen](./assets/Light_UI_search_screen.PNG)
 
 
 ## Usecase flow of the main project
