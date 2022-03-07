@@ -3,6 +3,7 @@ import 'package:bookui/src/page/home/widget/custom_app_bar.dart';
 import 'package:bookui/src/page/home/widget/recommended_book.dart';
 import 'package:bookui/src/page/home/widget/trending_book.dart';
 import 'package:bookui/src/settings/settings_controller.dart';
+import 'package:bookui/src/page/home/widget/search_navigation_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,24 +30,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _widgetOptions = <Widget>[
-      ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              "Explore",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
-            ),
-          ),
-          CustomAppBar(settingsController: widget.settingsController),
-          //ComingBook(),
-          RecommendedBook(),
-          TrendingBook(),
-        ],
-      ),
-      ListView(children: [
-        CustomAppBar(settingsController: widget.settingsController),
-      ]),
+      HomeNavig(controller: widget.settingsController),
+      SearchNavig(controller: widget.settingsController),
       Text(
         'Index 2: Favorites',
       ),
@@ -83,6 +68,31 @@ class _HomePageState extends State<HomePage> {
       ],
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
+    );
+  }
+}
+
+
+class HomeNavig extends StatelessWidget {
+  final SettingsController controller;
+  const HomeNavig({Key? key, required this.controller}): super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(20),
+          child: Text(
+            "Explore",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+          ),
+        ),
+        CustomAppBar(settingsController: controller),
+        //ComingBook(),
+        RecommendedBook(),
+        TrendingBook(),
+      ],
     );
   }
 }
