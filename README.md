@@ -36,7 +36,7 @@ UI design :
 API : 
 - [x] Create providers for http calls to google books api 
 - [x] Create a converted for the json calls
-- [] Handle not found screens.
+- [ ] Handle not found screens.
 
 
 ## Book UI so far :
