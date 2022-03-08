@@ -16,6 +16,16 @@ Level : 1
 Status : OnGoing
 Hours spent : 17 hours 
 ```
+## Book UI so far :
+
+![Search Favorite Demo #1](./assets/demo2.gif) 
+
+
+## Usecase flow of the main project
+
+[Book_details.pdf](./assets/Book_details.pdf)
+
+
 ## TODO : (Chronological)
 
 UI design : 
@@ -37,18 +47,6 @@ API :
 - [x] Create providers for http calls to google books api 
 - [x] Create a converted for the json calls
 - [ ] Handle not found screens.
-
-
-## Book UI so far :
-
-![Search Favorite Demo #1](./assets/demo2.gif) 
-
-
-## Usecase flow of the main project
-
-[Book_details.pdf](./assets/Book_details.pdf)
-
-
 
 
 ## PROJECT BREAKDOWN STRUCTURE
