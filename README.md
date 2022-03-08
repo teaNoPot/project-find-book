@@ -1,4 +1,7 @@
 # Project find books
+
+## Introduction 
+
 This repository is the first part of the main project which aims to search books and find libraries containing them. I've decided to divide into 4 potential parts : 
 - A flutter app that allows users to search books and display their details. 
 - A flutter app that finds librairies using openstreetmap API.
@@ -8,7 +11,6 @@ This repository is the first part of the main project which aims to search books
 I'm also envisioning a fifth part to the project :
 - Creating a recommendation system for the project.
 
-
 ## Project summary
 
 ``` 
@@ -16,6 +18,7 @@ Level : 1
 Status : OnGoing
 Hours spent : 17 hours 
 ```
+
 ## Book UI so far :
 
 ![Search Favorite Demo #1](./assets/demo2.gif) 
