@@ -15,13 +15,13 @@ I'm also envisioning a fifth part to the project :
 
 ``` 
 Level : 1
-Status : OnGoing
-Hours spent : 17 hours 
+Status : Partially finished
+Hours spent : 18 hours 
 ```
 
 ## Book UI so far :
 
-![Search Favorite Demo #1](./assets/redemo3.gif) 
+![Search Favorite Demo #1](./assets/redmo3.gif) 
 
 
 ## Usecase flow of the main project
