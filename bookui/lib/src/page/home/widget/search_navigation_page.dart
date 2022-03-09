@@ -1,3 +1,4 @@
+import 'package:bookui/src/page/detail/book_details.dart';
 import 'package:flutter/material.dart';
 import 'package:bookui/src/settings/settings_controller.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ class _SearchNavigState extends State<SearchNavig> {
     _controller.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +105,10 @@ class _SearchNavigState extends State<SearchNavig> {
                             final book = provider.books[index];
 
                             return GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => BookDetailsPage(book)));
+                                },
                                 child: BookWidget(
                                     book.id,
                                     book.title,

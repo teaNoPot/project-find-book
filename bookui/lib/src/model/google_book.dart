@@ -2,7 +2,10 @@ class GoogleBookModel {
   String? id, title, subtitle, description, thumbnail, bookUrl;
   String? author;
 
-  GoogleBookModel({this.id, this.title, this.author, this.subtitle, this.description, this.thumbnail, this.bookUrl});
+  List? categories;
+
+  GoogleBookModel({this.id, this.title, this.author, this.subtitle, this.description, this.thumbnail, this.bookUrl,
+    this.categories});
 
   factory GoogleBookModel.fromApi(Map<String, dynamic> data) {
 
@@ -21,6 +24,13 @@ class GoogleBookModel {
       author = list[0];
     }
 
+    List<String> result = [];
+    if(data['volumeInfo']['categories'] != null &&  data['volumeInfo']['categories'].isNotEmpty) {
+      result = (data['volumeInfo']['categories'] as List)
+        .map((item) => item as String)
+        .toList();
+    }
+
     return GoogleBookModel(
         id: data['id'],
         title: data['volumeInfo']['title'],
@@ -28,7 +38,8 @@ class GoogleBookModel {
         description: data['volumeInfo']['description'],
         subtitle: data['volumeInfo']['subtitle'],
         thumbnail: getThumbnailSafety(data).replaceAll("http", "https"),
-        bookUrl: data['volumeInfo']['previewLink']);
+        bookUrl: data['volumeInfo']['previewLink'],
+        categories: result);
   }
 }
 

@@ -41,7 +41,7 @@ API :
 
 ## Book UI so far :
 
-![Search Favorite Demo #1](./assets/demo2.gif) 
+![Search Favorite Demo #1](./assets/redmo3.gif) 
 
 
 ## Usecase flow of the main project

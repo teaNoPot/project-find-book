@@ -3,6 +3,7 @@ import 'package:bookui/src/settings/settings_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:bookui/src/providers/book_provider.dart';
 
+import '../detail/book_details.dart';
 import '../home/widget/book.dart';
 
 class FavoriteNavig extends StatefulWidget {
@@ -54,7 +55,10 @@ class _FavoriteNavigState extends State<FavoriteNavig> {
                                 final book = provider.favoriteBooks[index];
 
                                 return GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => BookDetailsPage(book)));
+                                    },
                                     child: BookWidget(
                                         book.id,
                                         book.title,
